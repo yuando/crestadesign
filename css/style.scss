@@ -1,0 +1,746 @@
+@charset "utf-8";
+
+/*========================================================================================
+# mixins
+==========================================================================================*/
+
+// レイアウト幅
+$layout-width-inner: 1200px;
+
+//マップ型変数breakpointsを定義
+$breakpoints: (
+//キー　　値
+  "sm": "screen and (max-width: 767px)", /*スマホ版*/
+  "tab": "screen and (max-width: #{$layout-width-inner - 1px})", /*タブレット版*/
+  "md": "screen and (min-width: #{$layout-width-inner})", /*PC版*/
+) !default;
+
+//メディアクエリ用のmixinを定義。デフォ値はmd
+@mixin mq($breakpoint: md) {
+//map-get(マップ型変数, キー)で値を取得
+  @media #{map-get($breakpoints, $breakpoint)} {
+    //この中をカスタムできる
+    @content;
+  }
+}
+
+/*========================================================================================
+# colors
+==========================================================================================*/
+$primary-color: #282F35;
+$font-color: #171717;
+$link-color: #F7D43F;
+
+/*========================================================================================
+# base - 全体に共通するスタイル
+==========================================================================================*/
+@include mq(sm) { 
+  .is-pc {          //is-pcというクラスがついていたらスマホの時は表示されない、つまりPCのときだけ表示する
+    display: none;  
+  }
+}
+
+@include mq(tab) {
+  .is-pc {
+    display: none;
+  }
+}
+
+@include mq(md) {
+  .is-sp {         //is-spというクラスがついていたらPCの時は表示されない、つまりスマホのときだけ表示する
+    display: none; 
+  }
+}
+
+body {
+  font-size: 16px;
+  color: $font-color;
+  font-family: 'Noto Serif', 'Noto Serif JP',serif; //欧文から和文の順番
+  letter-spacing: 0.05em;
+}
+
+img {
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 120px;
+  box-sizing: content-box; //reset.cssでは ”box-sizing:border-box;” を指定しているためpaddingを含めて1200pxになってしまう。なので、要素をめちゃめちゃ広げてもpaddingの240pxを引いた960pxにまでしかならない。そこでデフォルト値のcontent-boxを指定する。
+
+  @include mq(tab) {
+    padding: 0 30px;
+  }
+
+  @include mq(sm) {
+    padding: 0 15px;
+  }
+}
+
+.section-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 220px; //カンプより左右のpaddingを220pxずつとる
+  box-sizing: content-box;
+
+  @include mq(tab) {
+    padding: 0 30px;
+  }
+
+  @include mq(sm) {
+    padding: 0 15px;
+  }
+}
+
+.main {
+  overflow: hidden;
+}
+
+.section-wrapper {
+  padding: 115px 0 80px; 
+
+  @include mq(sm) {
+    padding: 100px 0 60px;
+  }
+}
+
+.util-title {
+  font-size: 60px;
+  font-weight: bold;
+  font-style: italic;
+  color: $primary-color;
+  letter-spacing: 0.075em;
+
+  @include mq(tab) {
+    font-size: 45px;
+  }
+
+  @include mq(sm) {
+    font-size: 30px;
+  }
+  
+  &::after {
+    content: "";
+    display: inline-block;
+    height: 5px;
+    width: 200px;
+    background-color: $primary-color;
+    vertical-align: middle; //inlineの高さを真ん中にする
+    margin-left: 50px;
+
+    @include mq(sm) {
+      width: 90px;
+      margin-left: 30px;
+    }
+  }
+}
+
+.util-link {
+  display: inline-block;
+  width: 235px;
+  background: $link-color;
+  box-shadow: 0 0 6px #1b1310;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px 70px;
+  border-radius: 30px;
+  color: #171717;
+  transition: .3s;
+
+  &:hover {
+    opacity: .7;
+    transition: .3s;
+  }
+}
+
+.util-footer {
+  font-size: 90px;
+  font-weight: bold;
+  opacity: 0.05;
+  margin-top: 90px;
+
+  @include mq(tab) {
+    margin-top: 60px;
+  }
+
+  @include mq(tab) {
+    font-size: 65px;
+  }
+
+  @include mq(sm) {
+    margin-top: 40px;
+    font-size: 40px;
+  }
+}
+
+.text-left1 {
+  text-align: left;
+  padding-left: 220px;
+
+  @include mq(tab) {
+    padding-left: 30px;
+  }
+
+  @include mq(sm) {
+    padding-left: 15px;
+  }
+}
+
+.text-left2 {
+  padding-left: 120px;
+
+  @include mq(tab) {
+    padding-left: 30px;
+  }
+
+  @include mq(sm) {
+    padding-left: 15px;
+  }
+}
+
+.text-right1 {
+  text-align: right;
+  padding-right: 115px;
+
+  @include mq(tab) {
+    padding-right: 30px;
+  }
+
+  @include mq(sm) {
+    padding-right: 20px;
+  }
+}
+
+.text-right2 {
+  text-align: right;
+  padding-right: 120px;
+
+  @include mq(tab) {
+    padding-right: 50px;
+  }
+
+  @include mq(sm) {
+    padding-right: 20px;
+  }
+}
+
+.text-white {
+  color: #fff;
+}
+
+.util-title.text-white::after {
+  background: #fff;
+}
+
+/*==================================================================================
+# header
+=================================================================================== */
+.header {
+  padding: 24px 0;
+  position: absolute; //ヘッダーを浮かせる
+  width: 100%; //幅を100%に
+  top: 0;
+  left: 0;
+  z-index: 1;
+  transition: .3s;
+
+  @include mq(sm) {
+    padding: 35px 0;
+  }
+
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title a {
+  display: block;
+  font-size: 26px;
+  font-weight: bold;
+  color: #fff;
+  font-style: italic;
+}
+
+.header-nav { //スマホ時にクリックされた時に表示
+  @include mq(sm) {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: $primary-color;
+  }
+}
+
+.header-nav-list {
+  display: flex;
+
+  @include mq(sm) {
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.header-nav-item {
+  & + & {
+    margin-left: 30px;
+
+    @include mq(sm) {
+      margin-left: 0px;
+      margin-top: 30px;
+    }
+  }
+}
+
+.header-nav-item-link {
+  display: block;
+  color: #fff;
+  font-style: italic;
+  transition: .3s;
+
+  &:hover {
+    opacity: .7;
+    transition: .3s;
+  }
+}
+
+/* ハンバーガーボタン */
+.burger-btn {
+  display: none;
+
+  @include mq(sm) {
+    display: block;
+    position: absolute;
+    top: 30px;
+    right: 15px;
+  }
+}
+
+.bar {
+  display: block;
+  height: 3px;
+  width: 30px;
+  background-color: #fff;
+  transition: .3s;
+}
+
+.bar-top,
+.bar-mid {
+  margin-bottom: 8px;
+}
+
+//.burger-btnに.crossがついた時(jsで操作)
+.burger-btn.cross .bar-top { 
+  transform: rotate(45deg) translate(8px,8px);
+  transition: .3s;
+}
+
+.burger-btn.cross .bar-mid {
+  opacity: 0;
+  transition: .3s;
+}
+
+.burger-btn.cross .bar-bottom {
+  transform: rotate(-45deg) translate(8px,-8px);
+  transition: .3s;
+}
+
+//bodyに対してnoscrollがついたら
+body.noscroll {
+  overflow: hidden;
+}
+
+button { //buttonタグをreset
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  appearance: none;
+}
+
+.header.fixed { //jsで操作。fvのの高さを超えてスクロールをした時。
+
+  @include mq(md) {
+    position: fixed;
+    background-color: $primary-color;
+    padding: 30px;
+    width: 100%;
+    transition: .3s; 
+  }
+
+  @include mq(tab) {
+    position: fixed;
+    background-color: $primary-color;
+    padding: 30px;
+    width: 100%;
+    transition: .3s; 
+  }
+
+  @include mq(sm) {
+    display: none;
+  }
+
+}
+
+/*==================================================================================
+# first view
+=================================================================================== */
+.fv {
+  //background-image: url(../img/fv-bgi_01@2x.jpg);
+  //padding-top: 52.222%;
+  background-position: center;
+  background-size: cover;
+  position: relative; //キャッチコピーを浮かせるために
+
+  @include mq(md) {
+    min-height: 752px;
+  }
+
+  @include mq(sm) {
+    height: 600px;
+
+    img {
+      min-height: 600px;
+    }
+  }
+}
+
+.fv-copy {
+  position: absolute;
+  left: 0px;
+  bottom: 175px;
+
+  @include mq(tab) {
+    top: 150px;
+    left: 85px;
+    white-space: nowrap; //改行なくす
+  }
+
+  @include mq(sm) {
+    top: 210px;
+    left: 5px;
+    white-space: nowrap; //改行なくす
+  }
+}
+
+.en-copy {
+  font-size: 70px;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.07em;
+
+  @include mq(tab) {
+    font-size: 55px;
+  }
+
+  @include mq(sm) {
+    font-size: 35px;
+  }
+}
+
+.ja-copy {
+  margin-top: 45px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.07em;
+
+  @include mq(tab) {
+    font-size: 35px;
+    line-height: 1.5;
+  }
+
+  @include mq(sm) {
+    font-size: 30px;
+    line-height: 1.7;
+    margin-top: 55px;
+  }
+}
+
+.slick-arrow {
+  display: none !important; //最優先で適用させる
+}
+
+/*==================================================================================
+# concept
+=================================================================================== */
+
+.concept-inner {
+  
+}
+
+.concept-lead {
+  margin-top: 70px;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 1.666;
+  text-align: center;
+
+  @include mq(sm) {
+    font-size: 20px;
+    margin-top: 58px;
+  }
+}
+
+.concept-body {
+  margin-top: 60px;
+  
+  @include mq(md) {
+    display: flex;
+    align-items: center;
+  }
+
+
+  @include mq(tab) {
+    margin-top: 30px;
+  }
+
+  @include mq(sm) {
+    margin-top: 18px;
+  }
+}
+
+.concept-text {
+  font-weight: bold;
+  line-height: 1.875;
+
+  @include mq(md) {
+    flex: 0 1 100%;
+  }
+}
+
+.concept-img {
+  @include mq(md) {
+    flex: 0 0 440px;
+    margin-left: 120px;
+  }
+
+  @include mq(tab) {
+    margin-top: 30px;
+  }
+
+  @include mq(sm) {
+    margin-top: 30px;
+
+    img {
+      height: 150px;
+    }
+  }
+}
+
+/*==================================================================================
+# works
+=================================================================================== */
+.bg-works {
+  background-image: url(../img/works-bgi@2x.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
+.works-list {
+  margin-top: 90px;
+
+  @include mq(md) {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 220px;
+  }
+
+  @include mq(tab) {
+    padding: 0 30px;
+    margin-top: 60px;
+  }
+
+  @include mq(sm) {
+    padding: 0 30px;
+    margin-top: 55px;
+  }
+}
+
+.works-item {
+  @include mq(md) {
+    flex: 0 0 32%; //320px/1000px
+  }
+  background: #fff;
+
+  & + & {
+    margin-left: 20px;
+  }
+
+  @include mq(tab) {
+    & + & {
+      margin-left: 0px;
+      margin-top: 30px;
+    }
+  }
+
+  @include mq(sm) {
+    & + & {
+      margin-left: 0px;
+      margin-top: 30px;
+    }
+  }
+}
+
+.works-item-text {
+  color: #141414;
+  line-height: 1.875;
+  padding: 22px 20px;
+}
+
+.works-item-text-2 {
+  padding: 22px 20px 52px;
+}
+
+.works-footer {
+  margin-top: 85px;
+  text-align: center;
+} 
+
+/*==================================================================================
+# service
+=================================================================================== */
+.service-list {
+  margin-top: 85px;
+
+  @include mq(md) {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @include mq(tab) {
+    margin-top: 90px;
+  }
+
+  @include mq(sm) {
+    margin-top: 93px;
+  }
+}
+
+.service-item {
+  @include mq(md) {
+    width: 33.3%;
+  }
+
+  @include mq(tab) {
+
+    & + & {
+      margin-top: 30px;
+    }
+  }
+
+  @include mq(sm) {
+    & + & {
+      margin-top: 30px;
+    }
+  }
+}
+
+.service1 {
+  background-image: url(../img/service-img01@2x.jpg);
+  background-size: cover;
+}
+
+.service2 {
+  background-image: url(../img/service-img02@2x.jpg);
+  background-size: cover;
+}
+
+.service3 {
+  background-image: url(../img/sevice-img03@2x.jpg);
+  background-size: cover;
+}
+
+.service-item-link {
+  display: block;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 132px 148px;
+  transition: .3s;
+
+  &:hover {
+    background-color: rgba(40,47,53,.7);
+    transition: .3s;
+  }
+
+  @include mq(tab) {
+    font-size: 30px;
+    padding: 120px;
+    text-align: center;
+  }
+
+  @include mq(sm) {
+    font-size: 20px;
+    padding: 115px;
+    text-align: center;
+  }
+}
+
+/*==================================================================================
+# contact
+=================================================================================== */
+.contact-wrapper {
+  padding: 115px 0 80px; 
+
+  @include mq(sm) {
+    padding: 120px 0 64px;
+  }
+}
+
+.bg-contact {
+  background-image: url(../img/contact-bgi@2x.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
+.contact-inner {
+  margin-top: 90px;
+
+  @include mq(sm) {
+    margin-top: 84px;
+  }
+}
+
+.contact-text {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.2;
+  color: #fff;
+  text-align: center;
+}
+
+.contact-footer {
+  margin-top: 50px;
+  text-align: center;
+
+  @include mq(sm) {
+    margin-top: 42px;
+  }
+}
+
+/*==================================================================================
+# footer
+=================================================================================== */
+.footer {
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  background-color: #fff;
+  color: $primary-color;
+  padding: 30px 0;
+  letter-spacing: 0.08em;
+}
